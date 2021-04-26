@@ -1,6 +1,16 @@
+"""
+Compares the Kemeny-Rule with a heuristic method
+"""
+
 from kemeny import kemeny_rule
 
 def load_voting_profile(filename):
+    """
+    Loads a voting profile of the form:
+    x,a,b,...,n
+    Where x is the number of that particular kind of ballot
+    and a-n are numerics corresponding with candidates
+    """
     profile = []
 
     input_file = open(filename, 'r')
@@ -8,7 +18,8 @@ def load_voting_profile(filename):
     for line in input_file:
         string_array = line.split(',')
         ranking = [int(num_str) for num_str in string_array]
-        profile.append(ranking)
+        for _ in range(ranking[0]):
+            profile.append(ranking[1:])
 
     return profile
 
@@ -18,6 +29,7 @@ def main():
     """
 
     file_name = "sushi_data.txt"
+    short_file_name = "sushi_data.txt"
 
     # Load voting profile P for the data
     profile = load_voting_profile(file_name)
