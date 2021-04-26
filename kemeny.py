@@ -11,6 +11,7 @@ from collections import defaultdict
 from matrix import generate_zeros_matrix, matrix_multiplication
 
 NUM_WORKERS = 1
+STATIONARY_DISTRIBUTION_ITERATIONS = 1000
 
 def kendall_tau_distance(ranking_a, ranking_b):
     """
@@ -82,13 +83,16 @@ def determine_pairwise_victories(profile):
                 pairwise_victories[pair] += 1
     return pairwise_victories
 
-def markov_heuristic(profile):
+def markov_heuristic_mc3(profile):
     """
     The transition probability of a to b is:
     Summation of all orderings where
     sum(orderings where b is preferred to a) / Orderings * candidates
     The transition probability from a to a is 1 - Sum of all other transitions
     """
+
+    # Start timer
+    time_start = time.perf_counter()
 
     num_candidates = len(profile[0])
     num_votes = len(profile)
@@ -110,10 +114,21 @@ def markov_heuristic(profile):
         self_transition_probability = 1 - sum(transition_matrix[candidate - 1])
         transition_matrix[candidate - 1][candidate - 1] = self_transition_probability
 
-    # Define an initial state as all candidates equally likely to win
-    initial_vector = [1 / num_candidates] * num_candidates
-
     # Put the probability matrix to a high power to find the stationary distribution
+    stationary_distribution = transition_matrix.copy()
+    for _ in range(STATIONARY_DISTRIBUTION_ITERATIONS):
+        stationary_distribution = matrix_multiplication(stationary_distribution, transition_matrix)
 
-    a = matrix_multiplication(transition_matrix, transition_matrix)
-    print(a)
+    final_probabilities = stationary_distribution[0]
+    prob_tuples = [(idx + 1, prob) for idx, prob in enumerate(final_probabilities)]
+    prob_tuples.sort(key=lambda x: x[1], reverse=True)
+    final_ranking = [pair[0] for pair in prob_tuples]
+
+    print("The winning ranking is as follows: ")
+    winning_ranking_stringified = [str(i) for i in final_ranking]
+    print(", ".join(winning_ranking_stringified))
+
+    # Calculate time required to finish
+    time_finish = time.perf_counter()
+    time_elapsed = datetime.timedelta(seconds = (time_finish - time_start))
+    print(f"Applying the Kemeny Rule took {time_elapsed}")

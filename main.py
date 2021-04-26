@@ -2,7 +2,7 @@
 Compares the Kemeny-Rule with a heuristic method
 """
 
-from kemeny import kemeny_rule, markov_heuristic
+from kemeny import kemeny_rule, markov_heuristic_mc3
 
 def load_voting_profile(filename):
     """
@@ -44,7 +44,7 @@ def main():
     """
 
     file_name = "sushi_data.txt"
-    simplified_num_candidates = 8
+    simplified_num_candidates = 5
 
     # Load voting profile P for the data
     profile = load_voting_profile(file_name)
@@ -56,7 +56,7 @@ def main():
     kemeny_rule(short_profile)
 
     # Perform a Markov chain based approximation of the Kemeny Rule
-    markov_heuristic(profile)
+    markov_heuristic_mc3(profile)
 
 if __name__ == "__main__":
     main()
