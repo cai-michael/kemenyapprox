@@ -56,7 +56,7 @@ def main():
     kemeny_rule(short_profile)
 
     # Perform a Markov chain based approximation of the Kemeny Rule
-    markov_heuristic_mc3(profile)
+    markov_heuristic_mc3(short_profile)
 
 if __name__ == "__main__":
     main()

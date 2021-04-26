@@ -19,7 +19,7 @@ def kendall_tau_distance(ranking_a, ranking_b):
     """
     distance = 0
     num_candidates = len(ranking_a)
-    pairs = combinations(range(1, num_candidates), 2)
+    pairs = combinations(range(1, num_candidates + 1), 2)
     for alt_x, alt_y in pairs:
         a_order = ranking_a.index(alt_x) - ranking_a.index(alt_y)
         b_order = ranking_b.index(alt_x) - ranking_b.index(alt_y)
