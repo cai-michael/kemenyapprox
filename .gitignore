@@ -130,6 +130,7 @@ dmypy.json
 
 # Data Files
 sushi_data.txt
+sushi_data_short.txt
 
 # VSCode
 .vscode
