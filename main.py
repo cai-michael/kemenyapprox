@@ -3,6 +3,7 @@ Compares the Kemeny-Rule with a heuristic method
 """
 
 from kemeny import kemeny_rule, markov_heuristic_mc3
+from borda import borda_count
 
 def load_voting_profile(filename):
     """
@@ -44,7 +45,7 @@ def main():
     """
 
     file_name = "sushi_data.txt"
-    simplified_num_candidates = 5
+    simplified_num_candidates = 9
 
     # Load voting profile P for the data
     profile = load_voting_profile(file_name)
@@ -54,6 +55,9 @@ def main():
 
     # Perform the original Kemeny Rule using Kendall-Tau Distances
     kemeny_rule(short_profile)
+
+    # Perform the Borda Count, a 5-Approximation of the Kemeny Rule
+    borda_count(short_profile)
 
     # Perform a Markov chain based approximation of the Kemeny Rule
     markov_heuristic_mc3(short_profile)

@@ -10,7 +10,7 @@ import functools
 from collections import defaultdict
 from matrix import generate_zeros_matrix, matrix_multiplication
 
-NUM_WORKERS = 1
+NUM_WORKERS = 2
 STATIONARY_DISTRIBUTION_ITERATIONS = 1000
 
 def kendall_tau_distance(ranking_a, ranking_b):
@@ -42,6 +42,8 @@ def kemeny_rule(profile):
     """
     Implements the kemeny rule by calculating all Kendell-Tau distances
     """
+    print('\nApplying the Kemeny Rule to the Profile...')
+
     # Start timer
     time_start = time.perf_counter()
 
@@ -91,6 +93,8 @@ def markov_heuristic_mc3(profile):
     The transition probability from a to a is 1 - Sum of all other transitions
     """
 
+    print('\nApplying the MC3 Markov Heuristic to the Profile...')
+
     # Start timer
     time_start = time.perf_counter()
 
@@ -131,4 +135,4 @@ def markov_heuristic_mc3(profile):
     # Calculate time required to finish
     time_finish = time.perf_counter()
     time_elapsed = datetime.timedelta(seconds = (time_finish - time_start))
-    print(f"Applying the Kemeny Rule took {time_elapsed}")
+    print(f"Applying the MC3 Markov Model took {time_elapsed}")
