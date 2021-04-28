@@ -85,15 +85,70 @@ def determine_pairwise_victories(profile):
                 pairwise_victories[pair] += 1
     return pairwise_victories
 
-def markov_heuristic_mc3(profile):
+def create_transition_matrix(pairwise_victories, num_candidates, num_votes, mc_type):
     """
+    Generates a transition matrix based on the MC heuristic type
+
+    Type 1:
+    The transition probability of a to b is:
+    1 / # Candidates if b is preferred to a at some point
+    0 otherwise
+    The transition probability from a to a is 1 - Sum of all other transitions
+
+    Type 2:
+    The transition probability of a to b is:
+    1 / # Candidates if the majority of ballots prefer b to a
+    0 otherwise
+    The transition probability from a to a is 1 - Sum of all other transitions
+
+    Type 3:
     The transition probability of a to b is:
     Summation of all orderings where
     sum(orderings where b is preferred to a) / Orderings * candidates
     The transition probability from a to a is 1 - Sum of all other transitions
     """
 
-    print('\nApplying the MC3 Markov Heuristic to the Profile...')
+    # Put 0's on transition matrix
+    transition_matrix = generate_zeros_matrix(num_candidates, num_candidates)
+
+    # Populate transition probabilities in the matrix
+    candidiate_pairs = list(permutations(range(1, num_candidates + 1), 2))
+
+    # Based on preferences of a and b assign probability of a -> b
+    if mc_type == 1:
+        for first, second in candidiate_pairs:
+            if pairwise_victories[(second, first)] > 0:
+                probability = 1 / num_candidates
+            else:
+                probability = 0
+            transition_matrix[first - 1][second - 1] = probability
+
+    elif mc_type == 2:
+        for first, second in candidiate_pairs:
+            if pairwise_victories[(second, first)] > (num_votes // 2):
+                probability = 1 / num_candidates
+            else:
+                probability = 0
+            transition_matrix[first - 1][second - 1] = probability
+
+    elif mc_type == 3:
+        for first, second in candidiate_pairs:
+            probability = pairwise_victories[(second, first)] / (num_votes * num_candidates)
+            transition_matrix[first - 1][second - 1] = probability
+
+    # Determine the probability of a self-transition
+    for candidate in range(1, num_candidates + 1):
+        self_transition_probability = 1 - sum(transition_matrix[candidate - 1])
+        transition_matrix[candidate - 1][candidate - 1] = self_transition_probability
+
+    return transition_matrix
+
+def markov_heuristic(profile, mc_type):
+    """
+    Applies the Markov Chain Heuristic to a Profile using a transition function of mc_type
+    """
+
+    print(f'\nApplying the MC{mc_type} Markov Heuristic to the Profile...')
 
     # Start timer
     time_start = time.perf_counter()
@@ -102,21 +157,9 @@ def markov_heuristic_mc3(profile):
     num_votes = len(profile)
 
     # Determine pairwise victories for each pair of candidates
-    pairwise_victories = determine_pairwise_victories(profile)
+    pairwise_wins = determine_pairwise_victories(profile)
 
-    # Put 0's on transition matrix
-    transition_matrix = generate_zeros_matrix(num_candidates, num_candidates)
-
-    # Populate transition probabilities in the matrix
-    candidiate_pairs = list(permutations(range(1, num_candidates + 1), 2))
-
-    for first, second in candidiate_pairs:
-        probability = pairwise_victories[(second, first)] / (num_votes * num_candidates)
-        transition_matrix[first - 1][second - 1] = probability
-
-    for candidate in range(1, num_candidates + 1):
-        self_transition_probability = 1 - sum(transition_matrix[candidate - 1])
-        transition_matrix[candidate - 1][candidate - 1] = self_transition_probability
+    transition_matrix = create_transition_matrix(pairwise_wins, num_candidates, num_votes, mc_type)
 
     # Put the probability matrix to a high power to find the stationary distribution
     stationary_distribution = transition_matrix.copy()
@@ -135,4 +178,4 @@ def markov_heuristic_mc3(profile):
     # Calculate time required to finish
     time_finish = time.perf_counter()
     time_elapsed = datetime.timedelta(seconds = (time_finish - time_start))
-    print(f"Applying the MC3 Markov Model took {time_elapsed}")
+    print(f"Applying the MC{mc_type} Markov Model took {time_elapsed}")
