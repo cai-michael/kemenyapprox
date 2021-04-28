@@ -2,7 +2,7 @@
 Compares the Kemeny-Rule with a heuristic method
 """
 
-from kemeny import kemeny_rule, markov_heuristic_mc3
+from kemeny import kemeny_rule, markov_heuristic
 from borda import borda_count
 
 def load_voting_profile(filename):
@@ -59,8 +59,10 @@ def main():
     # Perform the Borda Count, a 5-Approximation of the Kemeny Rule
     borda_count(short_profile)
 
-    # Perform a Markov chain based approximation of the Kemeny Rule
-    markov_heuristic_mc3(short_profile)
+    # Perform Markov chain based approximations of the Kemeny Rule
+    markov_heuristic(short_profile, 1)
+    markov_heuristic(short_profile, 2)
+    markov_heuristic(short_profile, 3)
 
 if __name__ == "__main__":
     main()

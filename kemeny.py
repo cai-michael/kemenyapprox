@@ -114,6 +114,7 @@ def create_transition_matrix(pairwise_victories, num_candidates, num_votes, mc_t
     # Populate transition probabilities in the matrix
     candidiate_pairs = list(permutations(range(1, num_candidates + 1), 2))
 
+    # Based on preferences of a and b assign probability of a -> b
     if mc_type == 1:
         for first, second in candidiate_pairs:
             if pairwise_victories[(second, first)] > 0:
@@ -135,6 +136,7 @@ def create_transition_matrix(pairwise_victories, num_candidates, num_votes, mc_t
             probability = pairwise_victories[(second, first)] / (num_votes * num_candidates)
             transition_matrix[first - 1][second - 1] = probability
 
+    # Determine the probability of a self-transition
     for candidate in range(1, num_candidates + 1):
         self_transition_probability = 1 - sum(transition_matrix[candidate - 1])
         transition_matrix[candidate - 1][candidate - 1] = self_transition_probability
