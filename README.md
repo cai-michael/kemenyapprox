@@ -29,8 +29,12 @@ Each number corresponds with a particular piece of sushi
 There are a few important constants to change when running the program:
 - main.py
 
-    file_name = x
+    The input file name should be changed here
+    
+    ```file_name = x```
 
 - kemeny.py
 
-    NUM_WORKERS = z
+    The number of cores to be utilized should be changed here
+
+    ```NUM_WORKERS = z```
