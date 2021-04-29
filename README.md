@@ -1,5 +1,11 @@
 # Kemeny Approximation
 
+To run this program one argument is needed
+
+```python main.py num_candidates``` 
+
+Where ```num_candidates``` is the number of candidates to be aggregated on.
+
 Implementations of Markov Chain Approximations the Kemeny Rankings on sushi
 
 The input for this code is based on the PrefLib format.
@@ -24,8 +30,6 @@ There are a few important constants to change when running the program:
 - main.py
 
     file_name = x
-
-    simplified_num_candidates = y
 
 - kemeny.py
 
