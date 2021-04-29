@@ -2,6 +2,7 @@
 Compares the Kemeny-Rule with a heuristic method
 """
 
+import sys
 from kemeny import kemeny_rule, markov_heuristic
 from borda import borda_count
 
@@ -45,7 +46,7 @@ def main():
     """
 
     file_name = "sushi_data.txt"
-    simplified_num_candidates = 9
+    simplified_num_candidates = int(sys.argv[1])
 
     # Load voting profile P for the data
     profile = load_voting_profile(file_name)
