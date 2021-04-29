@@ -22,7 +22,11 @@ Each number corresponds with a particular piece of sushi
 
 There are a few important constants to change when running the program:
 - main.py
+
     file_name = x
+
     simplified_num_candidates = y
+
 - kemeny.py
+
     NUM_WORKERS = z
