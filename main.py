@@ -2,6 +2,8 @@
 Compares the Kemeny-Rule with a heuristic method
 """
 
+# Include only standard modules
+import argparse
 import sys
 from kemeny import kemeny_rule, markov_heuristic
 from borda import borda_count
@@ -45,8 +47,18 @@ def main():
     This program implements Kemeny-Young as well as an approximation algorithm.
     """
 
-    file_name = "sushi_data.txt"
-    simplified_num_candidates = int(sys.argv[1])
+    # Initiate the parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--file", help="The file of rankings", default="sushi_data.txt")
+    parser.add_argument("-n", "--num_candidates", help="number of candidates", type=int, default=5)
+    parser.add_argument("-p", "--processes", help="multiprocessing processes to run", type=int, default=1)
+
+    # Read arguments from the command line
+    args = parser.parse_args()
+
+    file_name = args.file
+    simplified_num_candidates = args.num_candidates
+    workers = args.processes
 
     # Load voting profile P for the data
     profile = load_voting_profile(file_name)
@@ -55,7 +67,7 @@ def main():
     short_profile = simplify_profile(profile, simplified_num_candidates)
 
     # Perform the original Kemeny Rule using Kendall-Tau Distances
-    kemeny_rule(short_profile)
+    kemeny_rule(short_profile, num_workers=workers)
 
     # Perform the Borda Count, a 5-Approximation of the Kemeny Rule
     borda_count(short_profile)

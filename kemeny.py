@@ -38,7 +38,7 @@ def calculate_ranking_score(ranking, profile):
 
     return ranking_score
 
-def kemeny_rule(profile):
+def kemeny_rule(profile, num_workers=1):
     """
     Implements the kemeny rule by calculating all Kendell-Tau distances
     """
@@ -54,7 +54,7 @@ def kemeny_rule(profile):
     rank_permutations = list(permutations(range(1, num_candidates + 1)))
 
     calculate_scores = functools.partial(calculate_ranking_score, profile=profile)
-    with Pool(NUM_WORKERS) as worker_pool:
+    with Pool(num_workers) as worker_pool:
         ranking_scores = worker_pool.map(calculate_scores, rank_permutations)
 
     min_ranking_score = min(ranking_scores)
